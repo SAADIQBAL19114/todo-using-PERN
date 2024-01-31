@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 const handleRegisterUser = async(req,res) => {
-    const { name, username, email, password, gender, dob, age, role } =
+    const { name, username, email, password, gender, dob, role } =
       req.body;
     try {
       userAlreadyExist = await users.findOne({ where: {email} });
@@ -17,6 +17,10 @@ const handleRegisterUser = async(req,res) => {
           message: "User Already Exist",
         });
       }
+     const newDob = new Date(dob);
+     const currentDate = new Date();
+     const age = currentDate.getFullYear() - newDob.getFullYear();
+
       const hash = await bcrypt.hash(password, 10);
       const user = await users.create({
         name,
@@ -31,7 +35,7 @@ const handleRegisterUser = async(req,res) => {
       res.status(201).json({
         message: "User Registered",
         data: user,
-        // token,
+        // token:token,
       });
     } catch (err) {
       return res.status(500).json({
@@ -68,6 +72,7 @@ const handleLoginUser = async (req, res) => {
       res.status(200).cookie("token", token, options).json({
         message: "user has been logged in",
         token: token,
+        user:user,
       });
     
   } catch (err) {
