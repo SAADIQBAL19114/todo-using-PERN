@@ -1,15 +1,19 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import api from "../api/axios";
 import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate()
   const submitHandler = async (value) => {
     console.log(value);
     try {
-      const {data} = await api.post("/users/login", value);
-      console.log(data);
+      const {data} = await api.post("/users/login", value, { withCredentials: true });
+      if(data.role === "user"){
+        navigate('/user')
+      }else{
+        navigate('/admin')
+      }
     } catch (error) {
       message.error("something went wrong");
     }

@@ -7,43 +7,42 @@ const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
 
-const handleRegisterUser = async(req,res) => {
-    const { name, username, email, password, gender, dob, role } =
-      req.body;
-    try {
-      userAlreadyExist = await users.findOne({ where: {email} });
-      if (userAlreadyExist) {
-        return res.status(400).json({
-          message: "User Already Exist",
-        });
-      }
-     const newDob = new Date(dob);
-     const currentDate = new Date();
-     const age = currentDate.getFullYear() - newDob.getFullYear();
-
-      const hash = await bcrypt.hash(password, 10);
-      const user = await users.create({
-        name,
-        username,
-        email,
-        password: hash,
-        gender,
-        dob,
-        age,
-        role,
-      });
-      res.status(201).json({
-        message: "User Registered",
-        data: user,
-        // token:token,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        message: "Internal Server Error",
-        error: err.message,
+const handleRegisterUser = async (req, res) => {
+  const { name, username, email, password, gender, dob, role } = req.body;
+  try {
+    userAlreadyExist = await users.findOne({ where: { email } });
+    if (userAlreadyExist) {
+      return res.status(400).json({
+        message: "User Already Exist",
       });
     }
-}
+    const newDob = new Date(dob);
+    const currentDate = new Date();
+    const age = currentDate.getFullYear() - newDob.getFullYear();
+
+    const hash = await bcrypt.hash(password, 10);
+    const user = await users.create({
+      name,
+      username,
+      email,
+      password: hash,
+      gender,
+      dob,
+      age,
+      role,
+    });
+    res.status(201).json({
+      message: "User Registered",
+      data: user,
+      // token:token,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
 
 const handleLoginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -59,22 +58,27 @@ const handleLoginUser = async (req, res) => {
       return res.status(401).json({
         message: "Password does not match",
       });
-    } 
-    const token = jwt.sign(
-        { id: user.id },
-        "secretkey");
+    }
+    const token = jwt.sign({ id: user.id }, "secretkey");
 
-      // cookie section
-      const options = {
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      };
-      res.status(200).cookie("token", token, options).json({
-        message: "user has been logged in",
-        token: token,
-        user:user,
-      });
-    
+    // cookie section
+    const options = {
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    };
+    res.cookie("auth-token", token, {
+      // maxAge: 900000,
+      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+      httpOnly: false,
+      domain: "localhost",
+      secure: true,
+    });
+    res.status(200).json({
+      message: "user has been logged in",
+      // token: token,
+      role: user.role,
+      username: user.username,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -82,7 +86,7 @@ const handleLoginUser = async (req, res) => {
       error: err.message,
     });
   }
-}; 
+};
 
 module.exports = {
   handleRegisterUser,
