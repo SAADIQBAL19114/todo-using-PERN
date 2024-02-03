@@ -59,15 +59,8 @@ const handleLoginUser = async (req, res) => {
         message: "Password does not match",
       });
     }
-    const token = jwt.sign({ id: user.id }, "secretkey");
-
-    // cookie section
-    const options = {
-      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      httpOnly: true,
-    };
+    const token = jwt.sign({ id: user.id ,role:user.role, username:user.username }, "secretkey");
     res.cookie("auth-token", token, {
-      // maxAge: 900000,
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
       httpOnly: false,
       domain: "localhost",
@@ -75,7 +68,7 @@ const handleLoginUser = async (req, res) => {
     });
     res.status(200).json({
       message: "user has been logged in",
-      // token: token,
+      token: token,
       role: user.role,
       username: user.username,
     });
