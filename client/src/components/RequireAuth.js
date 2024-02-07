@@ -1,12 +1,14 @@
-import { useLocation, Navigate} from "react-router";
+import { useLocation, Navigate } from "react-router";
 import useAuth from "../hooks/useAuth";
 import UserPage from "../pages/UserPage";
 import AdminPage from "../pages/AdminPage";
+import { useEffect } from "react";
+import api from "../api/axios";
 
 const RequireAuth = () => {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const location = useLocation();
-
+  
   return auth?.role === "admin" ? (
     <AdminPage />
   ) : auth?.role === "user" ? (

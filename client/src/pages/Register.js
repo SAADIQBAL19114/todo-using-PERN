@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Input, DatePicker, Select,message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import moment from "moment";
 
 const Register = () => {
   const navigate = useNavigate();
   const submitHandler = async (value) => {
-     const dobTimestamp = moment(value.dob).valueOf();
-    const newObj = { ...value, dob: dobTimestamp };
-    console.log(newObj);
+    const dobTimestamp = value.dob.format("DD/MM/YYYY");
+    const newObj = { ...value ,dob:dobTimestamp };
     try {
       await api.post("/users/register", newObj);
        message.success("Registration Successfull");

@@ -18,7 +18,7 @@ const AdminPage = () => {
   const navigate = useNavigate()
   const [cookie, setCookie, removeCookie] = useCookies(["auth-token"]);
   const handleLogout = () => {
-    removeCookie("auth-token");
+    removeCookie("token");
     navigate('/login')
   };
  

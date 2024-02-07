@@ -13,15 +13,17 @@ import { Button, Dropdown, Space } from "antd";
 import TestComponent from "../components/TestComponent";
 
 const UserPage = () => {
+    const navigate = useNavigate()
   const [key, setKey] = useState("");
   const [cookie, setCookie, removeCookie] = useCookies(["auth-token"]);
   const handleLogout = () => {
-    removeCookie("auth-token");
+    removeCookie("token");
   };
 
   const handleMenuClick = (e) => {
     if (e.key === "3") {
       handleLogout();
+      navigate('/login')
     }
     const selectedValue = () => {
       setKey(e.key);

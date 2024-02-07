@@ -5,22 +5,24 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
-  const {setAuth} = useAuth()
-  const navigate = useNavigate()
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
   const submitHandler = async (value) => {
     console.log(value);
     try {
-      const {data} = await api.post("/users/login", value, { withCredentials: true });
-      
-      if(data.role === "user"){
-        navigate('/user')
-      }else{
-        navigate('/admin')
+      const { data } = await api.post("/users/login", value, {
+        withCredentials: true,
+      });
+
+      if (data.role === "user") {
+        navigate("/user");
+      } else {
+        navigate("/admin");
       }
-      const token = data.token
-      const role = data.role
-      const username = data.username
-      setAuth({username, role, token })
+      const token = data.token;
+      const role = data.role;
+      const username = data.username;
+      setAuth({ username, role, token });
     } catch (error) {
       message.error("something went wrong");
     }
