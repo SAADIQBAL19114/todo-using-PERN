@@ -8,7 +8,7 @@ const Login = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const submitHandler = async (value) => {
-    console.log(value);
+    console.log("Login: ", value);
     try {
       const { data } = await api.post("/users/login", value, {
         withCredentials: true,

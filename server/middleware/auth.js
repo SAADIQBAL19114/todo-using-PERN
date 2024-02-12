@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
     }
     const decoded = jwt.verify(token, "secretkey");
     req.user = decoded;
-    console.log(req);
+    // console.log(req);
     next();
   } catch (error) {
     console.error(error);

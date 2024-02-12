@@ -24,7 +24,7 @@ const {
   checkAndDeleteExpiredTokens,
 } = require("./controllers/tokenController");
 cron.schedule("0 * * * *", async () => {
-  console.log("Checking and deleting expired tokens...");
+  console.log("Checking and deleting expired tokens...", new Date());
   await checkAndDeleteExpiredTokens();
 });
 

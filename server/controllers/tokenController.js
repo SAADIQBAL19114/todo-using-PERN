@@ -7,7 +7,7 @@ const checkAndDeleteExpiredTokens = async () => {
       { expired: true },
       {
         where: {
-          [sequelize.Sequelize.Op.or]: [
+          [sequelize.Sequelize.Op.and]: [
             { expiresAt: { [sequelize.Sequelize.Op.lt]: new Date() } },
             { expired: false },
           ],
